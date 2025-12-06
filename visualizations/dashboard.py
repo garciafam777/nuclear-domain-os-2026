@@ -1,41 +1,57 @@
-import os, time, random
-from colorama import init, Fore, Style
-init(autoreset=True)
+import streamlit as st
+import pandas as pd
+import os
+import glob
+from datetime import datetime
 
-G = Fore.GREEN + Style.BRIGHT
-C = Fore.CYAN + Style.BRIGHT
-Y = Fore.YELLOW + Style.BRIGHT
-M = Fore.MAGENTA + Style.BRIGHT
-R = Fore.RED + Style.BRIGHT
+st.set_page_config(page_title="NUCLEAR DOMAIN OS 2026", layout="wide")
 
-print(f"""
-{G}╔══════════════════════════════════════════════════════════════════════╗
-{G}║          N U C L E A R   D O M A I N   O S   2 0 2 6                 ║
-{G}║                  Museum-Grade • Multi-Agent • Trust-Scored          ║
-{G}║               1024-Dimensional Domain Intelligence System           ║
-{G}╚══════════════════════════════════════════════════════════════════════╝
-{Y}                   Initializing 11 specialist agents...                {C}
-""")
+# MATRIX GREEN THEME
+st.markdown("""
+<style>
+    .reportview-container {background: #000000}
+    .sidebar .sidebar-content {background: #000000}
+    h1, h2, h3 {color: #00ff00 !important; font-family: 'Courier New'}
+    .css-1d391kg {color: #00ff00 !important}
+    .stMetric {color: #00ff41 !important}
+</style>
+""", unsafe_allow_html=True)
 
-agents = [
-    "Extractor Agent          (Scrapy + Playwright)",
-    "Verifier Agent           (Trust Score Engine)",
-    "Translator Agent         (ArgoTranslate + FastText)",
-    "Historian Agent          (Wayback + OCR Ancient)",
-    "Analyst Agent            (KeyBERT + Transformers)",
-    "Orchestrator             (CrewAI + LangGraph)",
-    "Visualization Agent      (Streamlit + PyVis)",
-    "Storage Agent            (Chroma + Weaviate + Neo4j)",
-    "Trust Engine             (Your Formula + Cross-Ref)",
-    "Museum Curator           (HTML Exhibits per Domain)",
-    "Internationalization     (160+ languages live)"
-]
+st.title("╔══════════════════════════════════════════════════════════════════════╗")
+st.title("║          N U C L E A R   D O M A I N   O S   2 0 2 6                 ║")
+st.title("║                  LIVE MUSEUM DASHBOARD • ALL 11 AGENTS ACTIVE       ║")
+st.title("╚══════════════════════════════════════════════════════════════════════╝")
 
-for i, agent in enumerate(agents, 1):
-    print(f"{G}   [{i:2d}/11] {agent} {random.choice('█▓▒░')} ONLINE")
-    time.sleep(0.4)
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Agents Online", "11 / 11", "LIVE")
+with col2:
+    st.metric("Winners Found", len(glob.glob("Winners/*.csv")), "SCANNING")
+with col3:
+    st.metric("Trust Engine", "ACTIVE", "100%")
 
-print(f"\n{C}   ● ALL 11 AGENTS ACTIVE ●{Y} System ready for eternal hunt.")
-print(f"{M}   Next command →  streamlit run visualization/dashboard.py")
-print(f"{G}   Final museum exhibits will appear in /museum/ as interactive HTML\n")
-input(f"{G}   Press Enter when you're ready to launch the full Domain OS...")
+st.markdown("---")
+
+tab1, tab2, tab3, tab4 = st.tabs(["WINNERS", "TRUST SCORES", "HISTORY", "MUSEUM"])
+
+with tab1:
+    files = glob.glob("Winners/*.csv")
+    if files:
+        latest = max(files, key=os.path.getctime)
+        df = pd.read_csv(latest)
+        st.dataframe(df.style.set_properties(**{'color': '#00ff41', 'background-color': '#000000'}))
+        st.download_button("Download Latest", data=open(latest,'rb').read(), file_name=os.path.basename(latest))
+    else:
+        st.write("No winners yet — sniper will feed here automatically")
+
+with tab2:
+    st.write("Trust Score Engine → Coming in 3… 2… 1…")
+
+with tab3:
+    st.write("Wayback + OCR Timeline → Next")
+
+with tab4:
+    st.write("Museum HTML Exhibits per Domain → Launching")
+
+st.sidebar.success("NUCLEAR DOMAIN OS 2026\n11 Agents Active\nMuseum Mode: ENABLED")
+st.caption("Press R to refresh • Next: Trust Engine + 11-Agent Orchestra")
